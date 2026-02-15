@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRSHAAD HUSSAIN - Online Medicine Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <span class="logo-icon">💊</span>
+                <a href="index.html">IRSHAD HUSSAIN</a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="products.html" class="nav-link">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#categories" class="nav-link">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a href="cart.html" class="nav-link cart-link">
+                        <span class="cart-icon">🛒</span>
+                        Cart <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Health, Our Priority</h1>
+            <p>Get quality medicines delivered to your doorstep safely and conveniently</p>
+            <div class="hero-buttons">
+                <a href="products.html" class="btn btn-primary">Shop Now</a>
+                <a href="#categories" class="btn btn-secondary">Browse Categories</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-circle">
+                <span class="hero-emoji">💉</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🚚</div>
+            <h3>Fast Delivery</h3>
+            <p>Get your medicines within 24 hours</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">✅</div>
+            <h3>Verified Products</h3>
+            <p>100% authentic and certified medicines</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🛡️</div>
+            <h3>Secure & Safe</h3>
+            <p>Your health data is always protected</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">👨‍⚕️</div>
+            <h3>Expert Support</h3>
+            <p>Pharmacist consultation available 24/7</p>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="categories">
+        <div class="section-header">
+            <h2>Shop by Category</h2>
+            <p>Find what you need easily</p>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card" onclick="filterProducts('pain-relief')">
+                <div class="category-icon">💊</div>
+                <h3>Pain Relief</h3>
+                <p>Tablets & Capsules</p>
+            </div>
+            <div class="category-card" onclick="filterProducts('cold-flu')">
+                <div class="category-icon">🤧</div>
+                <h3>Cold & Flu</h3>
+                <p>Quick relief medicines</p>
+            </div>
+            <div class="category-card" onclick="filterProducts('vitamins')">
+                <div class="category-icon">🥗</div>
+                <h3>Vitamins</h3>
+                <p>Supplements & nutrients</p>
+            </div>
+            <div class="category-card" onclick="filterProducts('digestion')">
+                <div class="category-icon">🫖</div>
+                <h3>Digestion</h3>
+                <p>Digestive health</p>
+            </div>
+            <div class="category-card" onclick="filterProducts('skin-care')">
+                <div class="category-icon">🧴</div>
+                <h3>Skin Care</h3>
+                <p>Creams & ointments</p>
+            </div>
+            <div class="category-card" onclick="filterProducts('first-aid')">
+                <div class="category-icon">🩹</div>
+                <h3>First Aid</h3>
+                <p>Emergency supplies</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="section-header">
+            <h2>Featured Products</h2>
+            <p>Top selling medicines this month</p>
+        </div>
+        <div class="products-grid" id="featuredProducts">
+            <!-- Products will be loaded by JavaScript -->
+        </div>
+        <div class="view-all">
+            <a href="products.html" class="btn btn-primary">View All Products</a>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="newsletter-content">
+            <h2>Stay Updated</h2>
+            <p>Subscribe to get special offers and health tips</p>
+            <div class="newsletter-form">
+                <input type="email" placeholder="Enter your email" required>
+                <button class="btn btn-primary">Subscribe</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About MediCare</h4>
+                <p>Your trusted online medicine store delivering quality medicines safely and conveniently to your home.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p>Email: support@irshadhussain.com</p>
+                <p>Phone: 9391796638-MEDICARE</p>
+                <p>Hours: 24/7 Support Available</p>
+            </div>
+            <div class="footer-section">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 IRSHAD HUSSAIN. All rights reserved. | Licensed Pharmacy</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
