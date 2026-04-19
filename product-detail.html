@@ -132,9 +132,9 @@
     <!-- Product Tabs Section -->
     <section class="product-tabs">
         <div class="tabs-header">
-            <button class="tab-button active" onclick="switchTab('description')">Description</button>
-            <button class="tab-button" onclick="switchTab('usage')">How to Use</button>
-            <button class="tab-button" onclick="switchTab('reviews')">Reviews</button>
+            <button class="tab-button active" onclick="switchTab('description', this)">Description</button>
+            <button class="tab-button" onclick="switchTab('usage', this)">How to Use</button>
+            <button class="tab-button" onclick="switchTab('reviews', this)">Reviews</button>
         </div>
 
         <div class="tabs-content">
@@ -235,6 +235,7 @@
         </div>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

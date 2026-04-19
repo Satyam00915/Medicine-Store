@@ -163,8 +163,7 @@ function displayFeaturedProducts(productsToDisplay) {
 
 // ========== Category Filter ==========
 function filterProducts(category) {
-    const filtered = products.filter(p => p.category === category);
-    displayProducts(filtered);
+    localStorage.setItem('selectedCategory', category);
     window.location.href = 'products.html';
 }
 
@@ -216,6 +215,7 @@ function updateCartCount() {
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     const cartCountElements = document.querySelectorAll('.cart-count');
     cartCountElements.forEach(el => el.textContent = count);
+    $('.cart-count').stop(true, true).fadeOut(100).fadeIn(100);
 }
 
 // ========== Display Cart ==========
@@ -275,31 +275,25 @@ function updateCartSummary() {
 
 // ========== Notifications ==========
 function showNotification(message) {
-    // Simple notification (no external library needed)
     console.log(message);
-    
-    // Optional: Create a toast notification
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #0f7d9d;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 9999;
-        animation: slideIn 0.3s ease;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
+
+    const notification = $('<div class="toast-notification"></div>').text(message).css({
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        background: '#0f7d9d',
+        color: '#fff',
+        padding: '1rem 2rem',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        zIndex: 9999,
+        display: 'none'
+    });
+
+    $('body').append(notification);
+    notification.fadeIn(250).delay(2500).fadeOut(250, function() {
+        $(this).remove();
+    });
 }
 
 // ========== Checkout ==========
@@ -318,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ========== Product Tabs ==========
-function switchTab(tabName) {
+function switchTab(tabName, clickedButton) {
     // Hide all tabs
     const tabPanes = document.querySelectorAll('.tab-pane');
     tabPanes.forEach(pane => pane.classList.remove('active'));
@@ -331,8 +325,10 @@ function switchTab(tabName) {
     const selectedPane = document.getElementById(tabName);
     if (selectedPane) {
         selectedPane.classList.add('active');
-        // Add active class to clicked button
-        event.target.classList.add('active');
+        const activeButton = clickedButton || event?.target;
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
     }
 }
 
@@ -350,44 +346,91 @@ function decreaseQty() {
 }
 
 // ========== Search & Sort ==========
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(query) ||
-                p.category.toLowerCase().includes(query)
-            );
-            displayProducts(filtered);
-        });
+
+$(function() {
+    // Smooth scrolling for anchor links
+    $('a[href^="#"]').on('click', function(e) {
+        const target = $(this).attr('href');
+        if (target.length > 1 && $(target).length) {
+            e.preventDefault();
+            $('html, body').animate({ scrollTop: $(target).offset().top - 80 }, 500);
+        }
+    });
+
+    // Apply selected category filter stored from the homepage
+    const selectedCategory = localStorage.getItem('selectedCategory');
+    if (selectedCategory && $('#productsGrid').length) {
+        const filtered = products.filter(p => p.category === selectedCategory);
+        displayProducts(filtered);
+        localStorage.removeItem('selectedCategory');
+        $('.filters-sidebar input[type="checkbox"][value="' + selectedCategory + '"]').prop('checked', true);
     }
 
-    const sortSelect = document.getElementById('sortSelect');
-    if (sortSelect) {
-        sortSelect.addEventListener('change', function(e) {
-            let sorted = [...products];
-            
-            switch(e.target.value) {
-                case 'price-low':
-                    sorted.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price-high':
-                    sorted.sort((a, b) => b.price - a.price);
-                    break;
-                case 'popular':
-                    sorted.sort((a, b) => b.reviews - a.reviews);
-                    break;
-                case 'newest':
-                default:
-                    // Keep original order
-                    break;
-            }
-            
-            displayProducts(sorted);
-        });
-    }
+    // Filter inputs
+    $('#searchInput').on('input', applyProductsFilters);
+    $('#sortSelect').on('change', applyProductsFilters);
+    $('.filters-sidebar input[type="checkbox"]').on('change', applyProductsFilters);
+
+    $('.filters-sidebar .btn.btn-secondary').filter(function() {
+        return $(this).text().trim() === 'Clear Filters';
+    }).on('click', function(e) {
+        e.preventDefault();
+        $('.filters-sidebar input[type="checkbox"]').prop('checked', false);
+        $('#searchInput').val('');
+        $('#sortSelect').val('newest');
+        displayProducts(products);
+    });
+
+    // Tab clicks on product-detail page
+    $('.tab-button').on('click', function() {
+        const onclickAttr = $(this).attr('onclick');
+        const match = onclickAttr ? onclickAttr.match(/switchTab\('(.+)'\)/) : null;
+        const tabName = match ? match[1] : $(this).data('target');
+        if (tabName) {
+            switchTab(tabName, this);
+        }
+    });
+
+    // Button highlight feedback when adding products
+    $(document).on('click', '.product-card .btn-primary', function() {
+        const card = $(this).closest('.product-card');
+        card.addClass('highlight');
+        setTimeout(() => card.removeClass('highlight'), 300);
+    });
 });
+
+function applyProductsFilters() {
+    if (!$('#productsGrid').length) return;
+
+    const query = $('#searchInput').val().toLowerCase();
+    const checkedCategories = $('.filters-sidebar input[type="checkbox"]:checked').map(function() {
+        return this.value;
+    }).get();
+
+    const sortValue = $('#sortSelect').val();
+    let filtered = products.filter(p => {
+        const matchesText = p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query);
+        const matchesCategory = checkedCategories.length === 0 || checkedCategories.includes(p.category);
+        return matchesText && matchesCategory;
+    });
+
+    switch (sortValue) {
+        case 'price-low':
+            filtered.sort((a, b) => a.price - b.price);
+            break;
+        case 'price-high':
+            filtered.sort((a, b) => b.price - a.price);
+            break;
+        case 'popular':
+            filtered.sort((a, b) => b.reviews - a.reviews);
+            break;
+        case 'newest':
+        default:
+            break;
+    }
+
+    displayProducts(filtered);
+}
 
 // ========== Load Cart on Cart Page ==========
 if (document.getElementById('cartItems')) {
